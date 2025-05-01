@@ -1,10 +1,9 @@
 import csv
-from dataclasses import dataclass, fields, astuple
+from dataclasses import dataclass, fields
 from urllib.parse import urljoin
 
 import requests
 from bs4 import Tag, BeautifulSoup
-
 
 BASE_URL = "https://quotes.toscrape.com/"
 
@@ -59,7 +58,12 @@ def write_quotes_to_csv(quotes: list[Quote], filename: str) -> None:
     with open(filename, "w", newline="", encoding="utf-8") as file:
         writer = csv.writer(file)
         writer.writerow(QUOTE_FIELDS)
-        writer.writerows([astuple(quote) for quote in quotes])
+        for quote in quotes:
+            writer.writerow([
+                quote.text,
+                quote.author,
+                str(quote.tags)
+            ])
 
 
 def main(output_csv_path: str) -> None:
